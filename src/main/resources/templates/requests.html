@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Requests</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body>
+<div th:replace="fragments/navbar.html :: navigation"></div>
+<main>
+    <div>
+        <table class="table">
+            <thead class="thead-light">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Patient ID</th>
+                <th scope="col">Patient Name</th>
+                <th scope="col">Application Date</th>
+                <th scope="col">Vaccination Date</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="request : ${requests}">
+                <td class="align-middle"><span class="align-middle" th:text="${request.id}"></span></td>
+                <td class="align-middle"><span class="align-middle" th:text="${request.patient.id}"></span></td>
+                <td class="align-middle"><span class="align-middle" th:text="${request.patient.fullName}"></span></td>
+                <td class="align-middle"><span class="align-middle" th:text="${request.applicationDate}"></span></td>
+                <td class="align-middle"><span class="align-middle" th:text="${request.vaccinationDate}"></span></td>
+                <td>
+                    <form th:action="@{/request/accept}" method="post">
+                        <input type="hidden" name="requestId" th:value="${request.id}">
+                        <button class="btn btn-success">Accept</button>
+                    </form>
+                </td>
+                <td>
+                    <form th:action="@{/request/delete}" method="post">
+                        <input type="hidden" name="requestId" th:value="${request.id}">
+                        <button type="submit" class="btn btn-danger">Remove</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+</body>
+</html>

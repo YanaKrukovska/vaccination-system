@@ -24,7 +24,7 @@ public class Vaccination {
     private VaccineType vaccineType;
 
     @Column(nullable = false)
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date vaccinationDate;
 
     @Column(nullable = false)

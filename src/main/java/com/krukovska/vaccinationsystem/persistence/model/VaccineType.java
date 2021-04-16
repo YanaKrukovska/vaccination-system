@@ -1,12 +1,15 @@
 package com.krukovska.vaccinationsystem.persistence.model;
 
+import lombok.Getter;
+
+@Getter
 public enum VaccineType {
 
-    PHIZER("Phizer"),
+    PFIZER("Pfizer"),
     JOHNSON("Johnson & Johnson"),
     MODERNA("Moderna");
 
-    private String name;
+    private final String name;
 
     VaccineType(String name) {
         this.name = name;

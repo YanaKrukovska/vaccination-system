@@ -1,19 +1,33 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Vaccination Center</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="../static/css/form.css" th:href="@{/css/form.css}" rel="stylesheet" type="text/css" media="all"/>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 </head>
-<body>
 <div th:replace="fragments/navbar.html :: navigation"></div>
-
-<p>Hello</p>
-
-<form>
-    <h1>Apply for vaccination now</h1>
-    <h3>Vaccinate in 2 weeks!</h3>
-</form>
+<body>
+<div class="custom-form" style="margin-top: 5%">
+    <form>
+        <h2 class="text-center">Apply for vaccination now</h2>
+        <h5 class="text-center" style="margin-bottom: 50px">Get your vaccine in two weeks!</h5>
+        <button id="apply-button" type="button" class="btn btn-primary btn-block">Apply now</button>
+        <div id="confirm" class="alert alert-success" role="alert" style="display: none; margin-top: 15px">Your request was sent</div>
+    </form>
+</div>
+<script>
+    $('#apply-button').click(function () {
+        $.ajax({
+            type: 'POST',
+            url: '/request',
+            success: function () {
+                $('#confirm').show();
+            }
+        });
+    });
+</script>
 </body>
 </html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="eng" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>Add vaccination information</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="../static/css/form.css" th:href="@{/css/form.css}" rel="stylesheet" type="text/css" media="all"/>
+</head>
+<body>
+<div th:replace="fragments/navbar.html :: navigation"></div>
+<div class="custom-form">
+    <form th:action="@{/vaccination}" th:object="${vaccination}" method="post">
+        <h2 class="text-center">Insert information</h2>
+        <h6 th:text="'Doctor id: ' + ${vaccination.getDoctor().getId()}"></h6>
+        <h6 th:text="'Doctor name: ' + ${vaccination.getDoctor().getFullName()}"></h6>
+        <br>
+        <h6 th:text="'Patient id: ' + ${patient.getId()}"></h6>
+        <h6 th:text="'Patient name: ' + ${patient.getFullName()}"></h6>
+        <br>
+        <h6 th:text="'Date: ' + ${vaccination.getVaccinationDate()}"></h6>
+        <h6 th:text="'Doze #' + ${vaccination.getDozeNumber()}"></h6>
+
+        <div class="form-group">
+            <label for="vaccineNumber">Vaccine:</label>
+            <select class="form-control" id="vaccineNumber" name="vaccineNumber">
+                <option th:each="vaccine : ${vaccines}" th:value="${vaccine.ordinal()}"
+                        th:text="${vaccine.getName()}"></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="Additional Information"
+                   th:field="*{additionalInformation}">
+        </div>
+
+        <input type="hidden" name="dozeNumber" th:value="${vaccination.dozeNumber}">
+        <input type="hidden" name="vaccDate" th:value="${{vaccination.vaccinationDate}}">
+        <input type="hidden" name="doctorId" th:value="${vaccination.getDoctor().getId()}">
+        <input type="hidden" name="patientId" th:value="${patient.getId()}">
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-success btn-block">Save</button>
+        </div>
+    </form>
+
+    <div th:if="${errors != null}" th:each="error : ${errors}">
+        <div class="alert alert-danger" role="alert" th:text="${error}" style="margin: 2%">
+        </div>
+    </div>
+</div>
+</body>
+</html>

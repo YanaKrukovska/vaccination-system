@@ -6,6 +6,7 @@ import com.krukovska.vaccinationsystem.persistence.model.Person;
 import com.krukovska.vaccinationsystem.persistence.model.Response;
 import com.krukovska.vaccinationsystem.service.PasswordService;
 import com.krukovska.vaccinationsystem.service.PersonService;
+import com.krukovska.vaccinationsystem.util.DateUtil;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -70,8 +71,7 @@ public class AuthenticationController {
     public String addUser(@ModelAttribute Patient patient, @ModelAttribute("birthday") String birthday,
                           @ModelAttribute("categoryNumber") Integer categoryNumber, Model model) {
 
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        patient.setBirthDate(formatter.parse(birthday));
+        patient.setBirthDate(DateUtil.convertStringToDate(birthday));
         patient.setCategory(Category.values()[categoryNumber]);
 
         Response<Patient> errorList = personService.save(patient);

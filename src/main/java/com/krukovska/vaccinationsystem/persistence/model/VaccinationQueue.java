@@ -30,4 +30,9 @@ public class VaccinationQueue {
     @Temporal(TemporalType.TIMESTAMP)
     private Date vaccinationDate;
 
+    public VaccinationQueue(Patient patient, Date applicationDate, Date vaccinationDate) {
+        this.patient = patient;
+        this.applicationDate = applicationDate;
+        this.vaccinationDate = vaccinationDate;
+    }
 }

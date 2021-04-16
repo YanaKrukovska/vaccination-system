@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Requests</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body>
+<div th:replace="fragments/navbar.html :: navigation"></div>
+<main>
+    <div>
+        <table class="table">
+            <thead class="thead-light">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Patient ID</th>
+                <th scope="col">Patient Name</th>
+                <th scope="col">Application Date</th>
+                <th scope="col">Vaccination Date</th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="appointment : ${appointments}">
+                <td class="align-middle"><span class="align-middle" th:text="${appointment.id}"></span></td>
+                <td class="align-middle"><span class="align-middle" th:text="${appointment.patient.id}"></span></td>
+                <td class="align-middle"><span class="align-middle" th:text="${appointment.patient.fullName}"></span>
+                </td>
+                <td class="align-middle"><span class="align-middle" th:text="${appointment.applicationDate}"></span>
+                </td>
+                <td class="align-middle"><span class="align-middle" th:text="${appointment.vaccinationDate}"></span>
+                </td>
+                <td th:if="${upcoming}">
+                    <form th:action="@{/vaccination/add}" method="get">
+                        <input type="hidden" name="appointmentId" th:value="${appointment.id}">
+                        <button type="submit" class="btn btn-warning">Mark as done</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+</body>
+</html>
