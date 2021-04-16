@@ -24,4 +24,8 @@ public class PatientService {
     public void updatePatient(Patient patient) {
         patientRepository.save(patient);
     }
+
+    public Patient findPatientByUsername(String username) {
+        return patientRepository.getByUsername(username);
+    }
 }

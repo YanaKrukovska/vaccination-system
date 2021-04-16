@@ -1,32 +1,32 @@
 package com.krukovska.vaccinationsystem.controller;
 
 import com.krukovska.vaccinationsystem.persistence.model.*;
-import com.krukovska.vaccinationsystem.service.DoctorService;
-import com.krukovska.vaccinationsystem.service.PatientService;
-import com.krukovska.vaccinationsystem.service.VaccinationService;
+import com.krukovska.vaccinationsystem.persistence.repository.HealthDiaryEntryRepository;
+import com.krukovska.vaccinationsystem.service.*;
 import com.krukovska.vaccinationsystem.util.DateUtil;
-import com.krukovska.vaccinationsystem.service.VaccinationQueueService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 
 @Controller
 public class ApplicationController {
 
     private final VaccinationQueueService vaccinationQueueService;
+    private final HealthDiaryEntryService healthDiaryEntryService;
     private final VaccinationService vaccinationService;
     private final PatientService patientService;
     private final DoctorService doctorService;
 
-    public ApplicationController(VaccinationQueueService vaccinationQueueService, VaccinationService vaccinationService, PatientService patientService, DoctorService doctorService) {
+    public ApplicationController(VaccinationQueueService vaccinationQueueService, HealthDiaryEntryService healthDiaryEntryService, VaccinationService vaccinationService, PatientService patientService, DoctorService doctorService) {
         this.vaccinationQueueService = vaccinationQueueService;
+        this.healthDiaryEntryService = healthDiaryEntryService;
         this.vaccinationService = vaccinationService;
         this.patientService = patientService;
         this.doctorService = doctorService;
@@ -52,6 +52,13 @@ public class ApplicationController {
         VaccinationQueue vaccinationQueue = vaccinationQueueService.findRequestById(requestId);
         vaccinationQueueService.deleteRequest(vaccinationQueue);
         return "redirect:/queue/all";
+    }
+
+    @PostMapping("/appointment/cancel")
+    public String cancelAppointment(@ModelAttribute("requestId") Long requestId) {
+        VaccinationQueue vaccinationQueue = vaccinationQueueService.findRequestById(requestId);
+        vaccinationQueueService.deleteRequest(vaccinationQueue);
+        return "redirect:/profile";
     }
 
     @PostMapping("/request/accept")
@@ -89,7 +96,7 @@ public class ApplicationController {
         Vaccination vaccination = new Vaccination();
         vaccination.setVaccinationDate(vaccinationQueue.getVaccinationDate());
 
-        int dozeNumber = patientService.countVaccinations(vaccinationQueue.getId());
+        int dozeNumber = patientService.countVaccinations(vaccinationQueue.getPatient().getId());
         vaccination.setDozeNumber(dozeNumber + 1);
 
         Doctor doctor = (Doctor) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -122,5 +129,80 @@ public class ApplicationController {
         patientService.updatePatient(patient);
 
         return "redirect:/queue/past";
+    }
+
+
+    @GetMapping("/profile")
+    public String getPatientProfile(Model model) {
+        Patient patient = (Patient) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<VaccinationQueue> pendingRequests = vaccinationQueueService.findAllPendingRequestsByPatientId(patient.getId());
+        List<VaccinationQueue> pastVaccinations = vaccinationQueueService.findAllPatientPastVaccinations(patient);
+        List<VaccinationQueue> upcomingVaccinations = vaccinationQueueService.findAllPatientUpcomingVaccinations(patient);
+        model.addAttribute("pending", pendingRequests);
+        model.addAttribute("past", pastVaccinations);
+        model.addAttribute("upcoming", upcomingVaccinations);
+        return "patient";
+    }
+
+    @GetMapping("/diary/{patientUsername}")
+    public String getTemperatureDiary(@PathVariable String patientUsername, Model model) {
+        Patient patient = patientService.findPatientByUsername(patientUsername);
+        List<HealthDiaryEntry> entries = patient.getHealthDiaryEntries();
+        entries.sort(Comparator.comparing(HealthDiaryEntry::getDate));
+
+        model.addAttribute("diary", entries);
+        return "diary";
+    }
+
+    @GetMapping("/diary/edit/{entryId}")
+    public String editDiaryEntry(@PathVariable("entryId") Long entryId, Model model) {
+        HealthDiaryEntry healthDiaryEntry = healthDiaryEntryService.findById(entryId);
+
+        model.addAttribute("entry", healthDiaryEntry);
+        model.addAttribute("date", healthDiaryEntry.getDate());
+        model.addAttribute("temperature", healthDiaryEntry.getTemperature());
+        return "entry-edit";
+    }
+
+    @PostMapping("/diary/edit/{entryId}")
+    public String updateDiaryEntry(@PathVariable("entryId") Long entryId, @ModelAttribute("newDate") String date,
+                                   @ModelAttribute("newTemperature") Double temperature) {
+
+        HealthDiaryEntry healthDiaryEntry = healthDiaryEntryService.findById(entryId);
+        healthDiaryEntry.setDate(DateUtil.convertStringToDate(date));
+        healthDiaryEntry.setTemperature(temperature);
+        healthDiaryEntryService.updateEntry(healthDiaryEntry);
+
+        return "redirect:/diary/" + SecurityContextHolder.getContext().getAuthentication().getName();
+    }
+
+    @GetMapping("/diary/add")
+    public String addDiaryEntry() {
+        return "entry-add";
+    }
+
+    @PostMapping("/diary/add")
+    public String updateDiaryEntry(@ModelAttribute("newDate") String date, @ModelAttribute("newTemperature") Double temperature) {
+
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Patient patient = patientService.findPatientByUsername(username);
+
+        HealthDiaryEntry healthDiaryEntry = new HealthDiaryEntry();
+        healthDiaryEntry.setDate(DateUtil.convertStringToDate(date));
+        healthDiaryEntry.setTemperature(temperature);
+        patient.getHealthDiaryEntries().add(healthDiaryEntry);
+        patientService.updatePatient(patient);
+
+        return "redirect:/diary/" + username;
+    }
+
+    @PostMapping("/entry/delete")
+    public String deleteEntry(@ModelAttribute("entryId") Long entryId) {
+        HealthDiaryEntry entry = healthDiaryEntryService.findById(entryId);
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Patient patient = patientService.findPatientByUsername(username);
+        patient.getHealthDiaryEntries().remove(entry);
+        patientService.updatePatient(patient);
+        return "redirect:/diary/" + username;
     }
 }

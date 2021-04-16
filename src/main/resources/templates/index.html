@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Vaccination Center</title>
@@ -10,7 +10,7 @@
 </head>
 <div th:replace="fragments/navbar.html :: navigation"></div>
 <body>
-<div class="custom-form" style="margin-top: 5%">
+<div sec:authorize="hasRole('ROLE_PATIENT')" class="custom-form" style="margin-top: 5%">
     <form>
         <h2 class="text-center">Apply for vaccination now</h2>
         <h5 class="text-center" style="margin-bottom: 50px">Get your vaccine in two weeks!</h5>

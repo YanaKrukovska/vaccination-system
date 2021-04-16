@@ -28,6 +28,7 @@ public class Patient extends Person {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Vaccination> vaccinations;
 
-
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<HealthDiaryEntry> healthDiaryEntries;
 
 }

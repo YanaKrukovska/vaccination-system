@@ -1,5 +1,6 @@
 package com.krukovska.vaccinationsystem.service;
 
+import com.krukovska.vaccinationsystem.persistence.model.Patient;
 import com.krukovska.vaccinationsystem.persistence.model.VaccinationQueue;
 import com.krukovska.vaccinationsystem.persistence.repository.VaccinationQueueRepository;
 import org.springframework.stereotype.Service;
@@ -42,5 +43,17 @@ public class VaccinationQueueService {
 
     public List<VaccinationQueue> getAllPastVaccinations() {
         return vaccinationQueueRepository.getAllWithVaccinationDateBefore(new Date());
+    }
+
+    public List<VaccinationQueue> findAllPendingRequestsByPatientId(Long patientId) {
+        return vaccinationQueueRepository.findAllByPatientIdAndVaccinationDateIsNull(patientId);
+    }
+
+    public List<VaccinationQueue> findAllPatientPastVaccinations(Patient patient) {
+        return vaccinationQueueRepository.getAllByPatientAndVaccinationDateBefore(patient, new Date());
+    }
+
+    public List<VaccinationQueue> findAllPatientUpcomingVaccinations(Patient patient) {
+        return vaccinationQueueRepository.getAllByPatientAndVaccinationDateAfter(patient, new Date());
     }
 }

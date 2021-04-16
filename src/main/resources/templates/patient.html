@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>My profile</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <style>
+        .vaccinations {
+            margin: 50px;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="fragments/navbar.html :: navigation"></div>
+<div class="vaccinations" th:if="${pending.size() != 0}">
+    <h3>Pending requests</h3>
+    <table class="table">
+        <thead class="thead-light">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Patient ID</th>
+            <th scope="col">Patient Name</th>
+            <th scope="col">Application Date</th>
+            <th scope="col">Vaccination Date</th>
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="vaccination : ${pending}">
+            <td class="align-middle"><span class="align-middle" th:text="${vaccination.id}"></span></td>
+            <td class="align-middle"><span class="align-middle" th:text="${vaccination.patient.id}"></span></td>
+            <td class="align-middle"><span class="align-middle" th:text="${vaccination.patient.fullName}"></span></td>
+            <td class="align-middle"><span class="align-middle" th:text="${vaccination.applicationDate}"></span></td>
+            <td class="align-middle"><span class="align-middle" th:text="${vaccination.vaccinationDate}"></span></td>
+            <td>
+                <form th:action="@{/appointment/cancel}" method="post">
+                    <input type="hidden" name="requestId" th:value="${vaccination.id}">
+                    <button type="submit" class="btn btn-danger">Cancel</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div class="vaccinations" th:if="${upcoming.size() != 0}">
+    <h3>Upcoming appointments</h3>
+    <table class="table">
+        <thead class="thead-light">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Patient ID</th>
+            <th scope="col">Patient Name</th>
+            <th scope="col">Application Date</th>
+            <th scope="col">Vaccination Date</th>
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="vaccination : ${upcoming}">
+            <td class="align-middle"><span class="align-middle" th:text="${vaccination.id}"></span></td>
+            <td class="align-middle"><span class="align-middle" th:text="${vaccination.patient.id}"></span></td>
+            <td class="align-middle"><span class="align-middle" th:text="${vaccination.patient.fullName}"></span></td>
+            <td class="align-middle"><span class="align-middle" th:text="${vaccination.applicationDate}"></span></td>
+            <td class="align-middle"><span class="align-middle" th:text="${vaccination.vaccinationDate}"></span></td>
+            <td>
+                <form th:action="@{/appointment/cancel}" method="post">
+                    <input type="hidden" name="requestId" th:value="${vaccination.id}">
+                    <button type="submit" class="btn btn-danger">Cancel</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="vaccinations" th:if="${past.size() != 0}">
+    <h3>Past appointments</h3>
+    <table class="table">
+        <thead class="thead-light">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Patient ID</th>
+            <th scope="col">Patient Name</th>
+            <th scope="col">Application Date</th>
+            <th scope="col">Vaccination Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="vaccination : ${past}">
+            <td class="align-middle"><span class="align-middle" th:text="${vaccination.id}"></span></td>
+            <td class="align-middle"><span class="align-middle" th:text="${vaccination.patient.id}"></span></td>
+            <td class="align-middle"><span class="align-middle" th:text="${vaccination.patient.fullName}"></span></td>
+            <td class="align-middle"><span class="align-middle" th:text="${vaccination.applicationDate}"></span></td>
+            <td class="align-middle"><span class="align-middle" th:text="${vaccination.vaccinationDate}"></span></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

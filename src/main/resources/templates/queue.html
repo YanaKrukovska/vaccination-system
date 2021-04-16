@@ -24,8 +24,12 @@
             <tbody>
             <tr th:each="appointment : ${appointments}">
                 <td class="align-middle"><span class="align-middle" th:text="${appointment.id}"></span></td>
-                <td class="align-middle"><span class="align-middle" th:text="${appointment.patient.id}"></span></td>
-                <td class="align-middle"><span class="align-middle" th:text="${appointment.patient.fullName}"></span>
+                <td class="align-middle">
+                    <span class="align-middle" th:text="${appointment.patient.id}"></span>
+                </td>
+                <td class="align-middle">
+                    <a th:href="@{/diary/{patientUsername}(patientUsername=${appointment.patient.username})}"
+                       th:text="${appointment.patient.fullName}" title="Open health diary"></a>
                 </td>
                 <td class="align-middle"><span class="align-middle" th:text="${appointment.applicationDate}"></span>
                 </td>

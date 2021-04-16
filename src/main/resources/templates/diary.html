@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Diary</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body>
+<div th:replace="fragments/navbar.html :: navigation"></div>
+
+<div sec:authorize="hasRole('ROLE_PATIENT')" style="margin: 25px;">
+    <form th:action="@{/diary/add}" method="get">
+        <button type="submit" class="btn btn-success">Add</button>
+    </form>
+</div>
+<div th:if="${diary.size() != 0}">
+
+    <table class="table">
+        <thead class="thead-light">
+        <tr>
+            <th scope="col">Date</th>
+            <th scope="col">Temperature</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="entry : ${diary}">
+            <td class="align-middle"><span class="align-middle" th:text="${entry.date}"></span></td>
+            <td class="align-middle"><span class="align-middle" th:text="${entry.temperature}"></span></td>
+            <td>
+                <form sec:authorize="hasRole('ROLE_PATIENT')" th:action="@{/diary/edit/{entryId}(entryId=${entry.id})}" method="get">
+                    <input type="hidden" name="entryId" th:value="${entry.id}">
+                    <button type="submit" class="btn btn-warning">Edit</button>
+                </form>
+            </td>
+            <td>
+                <form sec:authorize="hasRole('ROLE_PATIENT')" th:action="@{/entry/delete}" method="post">
+                    <input type="hidden" name="entryId" th:value="${entry.id}">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

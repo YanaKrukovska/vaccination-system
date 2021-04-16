@@ -18,12 +18,22 @@ VALUES (2, '1994-03-01', 'Justin Drew Bieber', '$2a$10$nezDN5pqRv9P3U2y8cTac.1zi
         '3800980000004',
         'EltonJohn', 2, 'Kyiv, Rocket st. 12', 'ELDERLY', '3800980000014');
 
-INSERT INTO queue (id, application_date, vaccination_date, patient_id) VALUES
-(1, '2021-04-01', '2021-04-15T14:25:10', 2),
-(2, '2021-04-14', null, 4);
+INSERT INTO queue (id, application_date, vaccination_date, patient_id)
+VALUES (1, '2021-04-01', '2021-04-15T14:25:10', 2),
+       (2, '2021-04-14', null, 4);
 
-INSERT INTO vaccination (id, additional_information, doze_number, vaccination_date, vaccine_type, doctor_id) VALUES
-(1, 'Sang Boyfriend while he was getting the vaccine', 1, '2021-04-15T14:25:10', 'MODERNA', 1);
+INSERT INTO vaccination (id, additional_information, doze_number, vaccination_date, vaccine_type, doctor_id)
+VALUES (1, 'Sang Boyfriend while he was getting the vaccine', 1, '2021-04-15T14:25:10', 'MODERNA', 1);
 
-INSERT INTO patient_vaccinations(patient_id, vaccinations_id) VALUES
-(2, 1);
+INSERT INTO patient_vaccinations(patient_id, vaccinations_id)
+VALUES (2, 1);
+
+INSERT INTO diary_entry(id, date, temperature)
+VALUES (1, '2021-04-15', 36.6),
+       (2, '2021-04-16', 37.3),
+       (3, '2021-04-17', 36.8);
+
+INSERT INTO patient_health_diary_entries(patient_id, health_diary_entries_id)
+VALUES (2, 1),
+       (2, 2),
+       (2, 3);
