@@ -1,4 +1,4 @@
-package com.krukovska.vaccinationsystem.persistence;
+package com.krukovska.vaccinationsystem.persistence.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,11 +16,13 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@MappedSuperclass
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Entity
 public class Person implements UserDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="id_generator")
+    @SequenceGenerator(name="id_generator", sequenceName="id_seq",initialValue = 3, allocationSize = 1)
     private Long id;
 
     @Column(nullable = false, unique = true)
@@ -31,8 +33,6 @@ public class Person implements UserDetails {
 
     @Column(nullable = false)
     private String password;
-
-    private String rawPassword;
 
     @Column(nullable = false)
     @Temporal(TemporalType.DATE)

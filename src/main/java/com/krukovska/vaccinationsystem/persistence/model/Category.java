@@ -1,5 +1,8 @@
-package com.krukovska.vaccinationsystem.persistence;
+package com.krukovska.vaccinationsystem.persistence.model;
 
+import lombok.Getter;
+
+@Getter
 public enum Category {
 
     MEDICAL_WORKER("Medical worker"),

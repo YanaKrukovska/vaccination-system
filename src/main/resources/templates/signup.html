@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Sign up</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="../static/css/authentication.css" th:href="@{/css/authentication.css}" rel="stylesheet" type="text/css"
+          media="all"/>
+</head>
+<body>
+<div class="authentication-form">
+    <form th:action="@{/signup-processing}" th:object="${patient}" method="post">
+        <h2 class="text-center">Sign up</h2>
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="Username" th:field="*{username}" required="required">
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="Full name" th:field="*{fullName}" required="required">
+        </div>
+        <div class="form-group">
+            <input type="date" class="form-control" value="2000-01-01" placeholder="Birth date" id="birthday"
+                   name="birthday" th:value="${{birthday}}" required="required">
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="Address" th:field="*{address}" required="required">
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="Phone number" th:field="*{phoneNumber}"
+                   required="required">
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="Emergency contact" th:field="*{emergencyContact}"
+                   required="required">
+        </div>
+        <div class="form-group">
+            <label for="categoryNumber">Category:</label>
+            <select class="form-control" id="categoryNumber" name="categoryNumber">
+                <option th:each="category : ${categories}" th:value="${category.ordinal()}"
+                        th:text="${category.getName()}"></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <input type="password" class="form-control" placeholder="Password" th:field="*{password}"
+                   required="required">
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-block">Sign up</button>
+        </div>
+    </form>
+    <p class="text-center"><a th:href="@{/login}">Already have an account? Sign in</a></p>
+
+    <div th:if="${errors != null}" th:each="error : ${errors}">
+        <div class="alert alert-danger" role="alert" th:text="${error}" style="margin: 2%">
+        </div>
+    </div>
+</div>
+</body>
+</html>

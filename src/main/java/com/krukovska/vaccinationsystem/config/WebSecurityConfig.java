@@ -1,5 +1,6 @@
 package com.krukovska.vaccinationsystem.config;
 
+import com.krukovska.vaccinationsystem.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +14,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Autowired
+    private PersonService personService;
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -22,12 +25,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-                .csrf()
-                .disable()
                 .authorizeRequests()
-                .antMatchers("/", "/resources/**", "/h2-console/**", "/css/**",
-                        "/webjars/**").permitAll()
-                .antMatchers("/**").authenticated()
+                .antMatchers("/signup", "/signup-processing").not().fullyAuthenticated()
+                .antMatchers("/resources/**", "/h2-console/**", "/css/**", "/webjars/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
@@ -40,11 +40,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login");
 
+        httpSecurity.csrf().disable();
         httpSecurity.headers().frameOptions().disable();
     }
 
     @Autowired
     protected void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        //auth.userDetailsService(employeeService).passwordEncoder(bCryptPasswordEncoder());
+        auth.userDetailsService(personService).passwordEncoder(bCryptPasswordEncoder());
     }
 }

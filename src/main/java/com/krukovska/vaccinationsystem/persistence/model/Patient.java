@@ -1,4 +1,4 @@
-package com.krukovska.vaccinationsystem.persistence;
+package com.krukovska.vaccinationsystem.persistence.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,5 +27,7 @@ public class Patient extends Person {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Vaccination> vaccinations;
+
+
 
 }

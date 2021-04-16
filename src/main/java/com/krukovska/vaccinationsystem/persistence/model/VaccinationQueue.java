@@ -1,4 +1,4 @@
-package com.krukovska.vaccinationsystem.persistence;
+package com.krukovska.vaccinationsystem.persistence.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
