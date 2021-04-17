@@ -6,7 +6,6 @@ import com.krukovska.vaccinationsystem.persistence.model.Person;
 import com.krukovska.vaccinationsystem.persistence.model.Response;
 import com.krukovska.vaccinationsystem.service.PasswordService;
 import com.krukovska.vaccinationsystem.service.PersonService;
-import com.krukovska.vaccinationsystem.util.DateUtil;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,15 +13,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import static com.krukovska.vaccinationsystem.util.LabelUtil.*;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import static com.krukovska.vaccinationsystem.util.DateUtil.convertStringToDate;
 
 @Controller
 public class AuthenticationController {
-
-    public static final String ERROR_LABEL = "error";
-    public static final String LOGIN_LABEL = "login";
 
     private final PersonService personService;
     private final PasswordService passwordService;
@@ -71,7 +69,7 @@ public class AuthenticationController {
     public String addUser(@ModelAttribute Patient patient, @ModelAttribute("birthday") String birthday,
                           @ModelAttribute("categoryNumber") Integer categoryNumber, Model model) {
 
-        patient.setBirthDate(DateUtil.convertStringToDate(birthday));
+        patient.setBirthDate(convertStringToDate(birthday));
         patient.setCategory(Category.values()[categoryNumber]);
 
         Response<Patient> errorList = personService.save(patient);

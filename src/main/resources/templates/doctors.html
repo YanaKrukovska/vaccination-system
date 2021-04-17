@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Doctor</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body>
+<div th:replace="fragments/navbar.html :: navigation"></div>
+<div>
+    <table class="table">
+        <thead class="thead-light">
+        <tr>
+            <th scope="col">Doctor ID</th>
+            <th scope="col">Doctor Name</th>
+            <th scope="col">Phone Number</th>
+            <th scope="col">Specialization</th>
+            <th scope="col">Unit</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="doctor : ${doctors}">
+            <td class="align-middle"><span class="align-middle" th:text="${doctor.id}"></span></td>
+            <td class="align-middle">
+                <span class="align-middle" th:text="${doctor.fullName}"></span>
+            </td>
+            <td class="align-middle">
+                <span class="align-middle" th:text="${doctor.phoneNumber}"></span>
+            </td>
+            <td class="align-middle">
+                <span class="align-middle" th:text="${doctor.specialization}"></span>
+            </td>
+            <td class="align-middle">
+                <span class="align-middle" th:text="${doctor.unit}"></span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

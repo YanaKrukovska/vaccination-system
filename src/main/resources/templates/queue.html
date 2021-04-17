@@ -16,6 +16,8 @@
                 <th scope="col">#</th>
                 <th scope="col">Patient ID</th>
                 <th scope="col">Patient Name</th>
+                <th scope="col">Phone Number</th>
+                <th scope="col">Emergency Number</th>
                 <th scope="col">Application Date</th>
                 <th scope="col">Vaccination Date</th>
                 <th scope="col"></th>
@@ -31,11 +33,17 @@
                     <a th:href="@{/diary/{patientUsername}(patientUsername=${appointment.patient.username})}"
                        th:text="${appointment.patient.fullName}" title="Open health diary"></a>
                 </td>
+                <td class="align-middle">
+                    <span class="align-middle" th:text="${appointment.patient.phoneNumber}"></span>
+                </td>
+                <td class="align-middle">
+                    <span class="align-middle" th:text="${appointment.patient.emergencyContact}"></span>
+                </td>
                 <td class="align-middle"><span class="align-middle" th:text="${appointment.applicationDate}"></span>
                 </td>
                 <td class="align-middle"><span class="align-middle" th:text="${appointment.vaccinationDate}"></span>
                 </td>
-                <td th:if="${upcoming}">
+                <td th:if="${today}">
                     <form th:action="@{/vaccination/add}" method="get">
                         <input type="hidden" name="appointmentId" th:value="${appointment.id}">
                         <button type="submit" class="btn btn-warning">Mark as done</button>

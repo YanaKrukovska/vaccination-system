@@ -4,6 +4,8 @@ import com.krukovska.vaccinationsystem.persistence.model.Doctor;
 import com.krukovska.vaccinationsystem.persistence.repository.DoctorRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class DoctorService {
 
@@ -14,5 +16,9 @@ public class DoctorService {
     }
     public Doctor findById(Long doctorId){
         return doctorRepository.getById(doctorId);
+    }
+
+    public List<Doctor> findAll() {
+        return doctorRepository.findAll();
     }
 }

@@ -20,11 +20,24 @@
             <li class="nav-item" sec:authorize="hasRole('ROLE_DOCTOR')">
                 <a class="nav-link" href="/queue/today">Today</a>
             </li>
+            <li class="nav-item" sec:authorize="hasRole('ROLE_DOCTOR')">
+                <a class="nav-link" href="/patient/all">Patients</a>
+            </li>
+            <li class="nav-item" sec:authorize="hasRole('ROLE_DOCTOR')">
+                <a class="nav-link" href="/patient/critical">High Temperature</a>
+            </li>
+            <li class="nav-item" sec:authorize="hasRole('ROLE_DOCTOR')">
+                <a class="nav-link" href="/patient/elderly">Elderly</a>
+            </li>
             <li class="nav-item" sec:authorize="hasRole('ROLE_PATIENT')">
                 <a class="nav-link" href="/profile">My profile</a>
             </li>
             <li class="nav-item" sec:authorize="hasRole('ROLE_PATIENT')">
-                <a class="nav-link" th:href="@{/diary/{patientId}(patientId=${#authentication.getName()})}">Temperature diary</a>
+                <a class="nav-link" th:href="@{/diary/{patientId}(patientId=${#authentication.getName()})}">Temperature
+                    diary</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/doctor/all">Doctors</a>
             </li>
         </ul>
 

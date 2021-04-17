@@ -31,7 +31,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/signup", "/signup-processing").not().fullyAuthenticated()
                 .antMatchers("/resources/**", "/h2-console/**", "/css/**", "/webjars/**").permitAll()
                 .antMatchers("/request").authenticated()
-                .antMatchers("/request/**", "/queue/**", "vaccination/**").hasRole("DOCTOR")
+                .antMatchers("/request/**", "/queue/**", "vaccination/**", "/patient/**").hasRole("DOCTOR")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()

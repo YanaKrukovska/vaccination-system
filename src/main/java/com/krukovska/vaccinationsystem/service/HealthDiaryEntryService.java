@@ -4,6 +4,8 @@ import com.krukovska.vaccinationsystem.persistence.model.HealthDiaryEntry;
 import com.krukovska.vaccinationsystem.persistence.repository.HealthDiaryEntryRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class HealthDiaryEntryService {
 
@@ -21,4 +23,7 @@ public class HealthDiaryEntryService {
         healthDiaryEntryRepository.save(entry);
     }
 
+    public List<HealthDiaryEntry> findAllEntriesWithHighTemperature(Double temperature) {
+        return healthDiaryEntryRepository.getAllByTemperatureIsGreaterThanEqual(temperature);
+    }
 }

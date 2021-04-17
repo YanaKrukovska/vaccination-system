@@ -2,7 +2,6 @@ package com.krukovska.vaccinationsystem.controller;
 
 import com.krukovska.vaccinationsystem.persistence.model.*;
 import com.krukovska.vaccinationsystem.service.*;
-import com.krukovska.vaccinationsystem.util.DateUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,6 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+
+import static com.krukovska.vaccinationsystem.util.DateUtil.*;
+import static com.krukovska.vaccinationsystem.util.LabelUtil.*;
 
 @Controller
 public class ApplicationController {
@@ -71,7 +73,7 @@ public class ApplicationController {
     @PostMapping("/request/accept")
     public String acceptRequest(@ModelAttribute("requestId") Long requestId) {
         VaccinationQueue vaccinationQueue = vaccinationQueueService.findRequestById(requestId);
-        vaccinationQueue.setVaccinationDate(DateUtil.getTwoWeeksFromNow());
+        vaccinationQueue.setVaccinationDate(getDateInDaysFromNow(TWO_WEEKS_IN_DAYS));
         vaccinationQueueService.updateRequest(vaccinationQueue);
         return "redirect:/queue/all";
     }
@@ -84,23 +86,23 @@ public class ApplicationController {
 
     @GetMapping("/queue/upcoming")
     public String getUpcomingVaccinations(Model model) {
-        model.addAttribute("appointments", vaccinationQueueService.getAllUpcomingVaccinations());
-        model.addAttribute("upcoming", true);
-        return "queue";
+        model.addAttribute(APPOINTMENTS_LABEL, vaccinationQueueService.getAllUpcomingVaccinations());
+        model.addAttribute(UPCOMING_LABEL, true);
+        return QUEUE_LABEL;
     }
 
     @GetMapping("/queue/today")
     public String getTodayVaccinations(Model model) {
-        model.addAttribute("appointments", vaccinationQueueService.getAllVaccinationsForToday());
-        model.addAttribute("upcoming", true);
-        return "queue";
+        model.addAttribute(APPOINTMENTS_LABEL, vaccinationQueueService.getAllVaccinationsForToday());
+        model.addAttribute("today", true);
+        return QUEUE_LABEL;
     }
 
     @GetMapping("/queue/past")
     public String getPastVaccinations(Model model) {
-        model.addAttribute("appointments", vaccinationQueueService.getAllPastVaccinations());
-        model.addAttribute("upcoming", false);
-        return "queue";
+        model.addAttribute(APPOINTMENTS_LABEL, vaccinationQueueService.getAllPastVaccinations());
+        model.addAttribute(UPCOMING_LABEL, false);
+        return QUEUE_LABEL;
     }
 
     @GetMapping("/vaccination/add")
@@ -129,7 +131,7 @@ public class ApplicationController {
                                  @ModelAttribute("vaccineNumber") Integer categoryNumber, Model model) {
 
         vaccination.setVaccineType(VaccineType.values()[categoryNumber]);
-        vaccination.setVaccinationDate(DateUtil.convertStringToDate(vaccinationDate));
+        vaccination.setVaccinationDate(convertStringToDate(vaccinationDate));
         vaccination.setDoctor(doctorService.findById(doctorId));
 
         Response<Vaccination> response = vaccinationService.addVaccination(vaccination);
@@ -141,6 +143,11 @@ public class ApplicationController {
         Patient patient = patientService.findPatientById(patientId);
         patient.getVaccinations().add(response.getObject());
         patientService.updatePatient(patient);
+
+        if (response.getObject().getDozeNumber() < 2) {
+            vaccinationQueueService.createNewRequest(new VaccinationQueue(patient, new Date(),
+                    getDateInDaysFromNow(SIX_WEEKS_IN_DAYS)));
+        }
 
         return "redirect:/queue/past";
     }
@@ -184,11 +191,11 @@ public class ApplicationController {
                                    @ModelAttribute("newTemperature") Double temperature) {
 
         HealthDiaryEntry healthDiaryEntry = healthDiaryEntryService.findById(entryId);
-        healthDiaryEntry.setDate(DateUtil.convertStringToDate(date));
+        healthDiaryEntry.setDate(convertStringToDate(date));
         healthDiaryEntry.setTemperature(temperature);
         healthDiaryEntryService.updateEntry(healthDiaryEntry);
 
-        return "redirect:/diary/" + SecurityContextHolder.getContext().getAuthentication().getName();
+        return REDIRECT_TO_DIARY_LABEL + SecurityContextHolder.getContext().getAuthentication().getName();
     }
 
     @GetMapping("/diary/add")
@@ -203,12 +210,12 @@ public class ApplicationController {
         Patient patient = patientService.findPatientByUsername(username);
 
         HealthDiaryEntry healthDiaryEntry = new HealthDiaryEntry();
-        healthDiaryEntry.setDate(DateUtil.convertStringToDate(date));
+        healthDiaryEntry.setDate(convertStringToDate(date));
         healthDiaryEntry.setTemperature(temperature);
         patient.getHealthDiaryEntries().add(healthDiaryEntry);
         patientService.updatePatient(patient);
 
-        return "redirect:/diary/" + username;
+        return REDIRECT_TO_DIARY_LABEL + username;
     }
 
     @PostMapping("/entry/delete")
@@ -218,6 +225,30 @@ public class ApplicationController {
         Patient patient = patientService.findPatientByUsername(username);
         patient.getHealthDiaryEntries().remove(entry);
         patientService.updatePatient(patient);
-        return "redirect:/diary/" + username;
+        return REDIRECT_TO_DIARY_LABEL + username;
+    }
+
+    @GetMapping("/patient/all")
+    public String getAllPatients(Model model) {
+        model.addAttribute(PATIENTS_LABEL, patientService.findAll());
+        return PATIENTS_LABEL;
+    }
+
+    @GetMapping("/patient/critical")
+    public String getAllCriticalPatients(Model model) {
+        model.addAttribute(PATIENTS_LABEL, patientService.findAllWithHighTemperature());
+        return PATIENTS_LABEL;
+    }
+
+    @GetMapping("/patient/elderly")
+    public String getAllElderlyPatients(Model model) {
+        model.addAttribute(PATIENTS_LABEL, patientService.findAllElderlyPatients());
+        return PATIENTS_LABEL;
+    }
+
+    @GetMapping("/doctor/all")
+    public String getAllDoctors(Model model) {
+        model.addAttribute("doctors", doctorService.findAll());
+        return "doctors";
     }
 }

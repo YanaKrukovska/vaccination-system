@@ -13,6 +13,7 @@
 </head>
 <body>
 <div th:replace="fragments/navbar.html :: navigation"></div>
+
 <div class="vaccinations" th:if="${pending.size() != 0}">
     <h3>Pending requests</h3>
     <table class="table">

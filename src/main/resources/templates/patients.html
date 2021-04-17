@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Critical</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body>
+<div th:replace="fragments/navbar.html :: navigation"></div>
+<div>
+    <table class="table">
+        <thead class="thead-light">
+        <tr>
+            <th scope="col">Patient ID</th>
+            <th scope="col">Patient Username</th>
+            <th scope="col">Patient Name</th>
+            <th scope="col">Category</th>
+            <th scope="col">Phone Number</th>
+            <th scope="col">Emergency Number</th>
+            <th scope="col">Address</th>
+            <th scope="col">Birth date</th>
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="patient : ${patients}">
+            <td class="align-middle"><span class="align-middle" th:text="${patient.id}"></span></td>
+            <td class="align-middle">
+                <span class="align-middle" th:text="${patient.username}"></span>
+            </td>
+            <td class="align-middle">
+                <a th:href="@{/diary/{patientUsername}(patientUsername=${patient.username})}"
+                   th:text="${patient.fullName}" title="Open health diary"></a>
+            </td>
+            <td class="align-middle">
+                <span class="align-middle" th:text="${patient.category}"></span>
+            </td>
+            <td class="align-middle">
+                <span class="align-middle" th:text="${patient.phoneNumber}"></span>
+            </td>
+            <td class="align-middle">
+                <span class="align-middle" th:text="${patient.emergencyContact}"></span>
+            </td>
+            <td class="align-middle"><span class="align-middle" th:text="${patient.address}"></span>
+            </td>
+            <td class="align-middle"><span class="align-middle" th:text="${patient.birthDate}"></span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

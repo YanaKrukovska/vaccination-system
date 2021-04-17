@@ -55,7 +55,7 @@ public class PersonService implements UserDetailsService {
             return new Response<>(patient, Collections.singletonList("Username is already taken"));
         }
 
-        patient.setRole(new Role(1L, "ROLE_PATIENT"));
+        patient.setRole(new Role(2L, "ROLE_PATIENT"));
         patient.setPassword(passwordService.encodePassword(patient.getPassword()));
         personRepository.save(patient);
         return new Response<>(patient, new LinkedList<>());

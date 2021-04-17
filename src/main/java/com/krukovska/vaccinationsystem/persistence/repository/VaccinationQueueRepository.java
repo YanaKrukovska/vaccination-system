@@ -4,8 +4,10 @@ import com.krukovska.vaccinationsystem.persistence.model.Patient;
 import com.krukovska.vaccinationsystem.persistence.model.VaccinationQueue;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.Temporal;
 import org.springframework.data.repository.query.Param;
 
+import javax.persistence.TemporalType;
 import java.util.Date;
 import java.util.List;
 
@@ -19,7 +21,7 @@ public interface VaccinationQueueRepository extends JpaRepository<VaccinationQue
     @Query("select q from queue q where q.vaccinationDate < :currentDateTime")
     List<VaccinationQueue> getAllWithVaccinationDateBefore(@Param("currentDateTime") Date currentDate);
 
-    List<VaccinationQueue> getAllByVaccinationDate(Date currentDate);
+    List<VaccinationQueue> getAllByVaccinationDateBetween(Date start, Date end);
 
     List<VaccinationQueue> findAllByVaccinationDateIsNull();
 

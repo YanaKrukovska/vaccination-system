@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 
+import static com.krukovska.vaccinationsystem.util.DateUtil.*;
+
 @Service
 public class VaccinationQueueService {
 
@@ -42,7 +44,8 @@ public class VaccinationQueueService {
     }
 
     public List<VaccinationQueue> getAllVaccinationsForToday() {
-        return vaccinationQueueRepository.getAllByVaccinationDate(new Date());
+        return vaccinationQueueRepository.getAllByVaccinationDateBetween(getMidnightOfCurrentDate(),
+                getDateInDaysFromNow(ONE_DAY));
     }
 
     public List<VaccinationQueue> getAllPastVaccinations() {

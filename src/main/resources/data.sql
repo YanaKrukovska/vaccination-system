@@ -19,8 +19,10 @@ VALUES (2, '1994-03-01', 'Justin Drew Bieber', '$2a$10$nezDN5pqRv9P3U2y8cTac.1zi
         'EltonJohn', 2, 'Kyiv, Rocket st. 12', 'ELDERLY', '3800980000014');
 
 INSERT INTO queue (id, application_date, vaccination_date, patient_id)
-VALUES (1, '2021-04-01', '2021-04-15T14:25:10', 2),
-       (2, '2021-04-14', null, 4);
+VALUES
+       (1, '2021-02-20', '2021-03-06T10:28:39', 2),
+       (2, '2021-03-06', '2021-04-17T19:25:10', 2),
+       (3, '2021-04-14', null, 4);
 
 INSERT INTO vaccination (id, additional_information, doze_number, vaccination_date, vaccine_type, doctor_id)
 VALUES (1, 'Sang Boyfriend while he was getting the vaccine', 1, '2021-04-15T14:25:10', 'MODERNA', 1);
