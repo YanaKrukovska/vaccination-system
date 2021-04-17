@@ -37,5 +37,7 @@ public class Vaccination {
     @JoinColumn(name = "doctor_id", foreignKey = @ForeignKey(name = "DOCTOR_ID_FK"))
     private Doctor doctor;
 
+    @Transient
+    private Long count;
 
 }

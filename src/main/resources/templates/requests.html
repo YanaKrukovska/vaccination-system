@@ -16,6 +16,7 @@
                 <th scope="col">#</th>
                 <th scope="col">Patient ID</th>
                 <th scope="col">Patient Name</th>
+                <th scope="col">Patient Category</th>
                 <th scope="col">Application Date</th>
                 <th scope="col">Vaccination Date</th>
                 <th scope="col"></th>
@@ -27,6 +28,7 @@
                 <td class="align-middle"><span class="align-middle" th:text="${request.id}"></span></td>
                 <td class="align-middle"><span class="align-middle" th:text="${request.patient.id}"></span></td>
                 <td class="align-middle"><span class="align-middle" th:text="${request.patient.fullName}"></span></td>
+                <td class="align-middle"><span class="align-middle" th:text="${request.patient.getCategory()}"></span></td>
                 <td class="align-middle"><span class="align-middle" th:text="${request.applicationDate}"></span></td>
                 <td class="align-middle"><span class="align-middle" th:text="${request.vaccinationDate}"></span></td>
                 <td>

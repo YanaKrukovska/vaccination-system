@@ -2,11 +2,13 @@ package com.krukovska.vaccinationsystem.service;
 
 import com.krukovska.vaccinationsystem.persistence.model.Response;
 import com.krukovska.vaccinationsystem.persistence.model.Vaccination;
+import com.krukovska.vaccinationsystem.persistence.model.VaccineStatistic;
 import com.krukovska.vaccinationsystem.persistence.repository.VaccinationRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 
 @Service
 public class VaccinationService {
@@ -42,5 +44,13 @@ public class VaccinationService {
         }
 
         return new Response<>(vaccination, new LinkedList<>());
+    }
+
+    public long getTotalAmount() {
+        return vaccinationRepository.count();
+    }
+
+    public List<VaccineStatistic> getVaccineStatistics() {
+        return vaccinationRepository.countEveryVaccineUse();
     }
 }

@@ -41,6 +41,10 @@ public class VaccinationQueueService {
         return vaccinationQueueRepository.getAllWithVaccinationDateAfter(new Date());
     }
 
+    public List<VaccinationQueue> getAllVaccinationsForToday() {
+        return vaccinationQueueRepository.getAllByVaccinationDate(new Date());
+    }
+
     public List<VaccinationQueue> getAllPastVaccinations() {
         return vaccinationQueueRepository.getAllWithVaccinationDateBefore(new Date());
     }

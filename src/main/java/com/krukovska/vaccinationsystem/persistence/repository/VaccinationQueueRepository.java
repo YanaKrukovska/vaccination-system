@@ -19,6 +19,8 @@ public interface VaccinationQueueRepository extends JpaRepository<VaccinationQue
     @Query("select q from queue q where q.vaccinationDate < :currentDateTime")
     List<VaccinationQueue> getAllWithVaccinationDateBefore(@Param("currentDateTime") Date currentDate);
 
+    List<VaccinationQueue> getAllByVaccinationDate(Date currentDate);
+
     List<VaccinationQueue> findAllByVaccinationDateIsNull();
 
     List<VaccinationQueue> findAllByPatientIdAndVaccinationDateIsNull(Long patientId);

@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link href="../static/css/form.css" th:href="@{/css/form.css}" rel="stylesheet" type="text/css" media="all"/>
+    <link href="../static/css/stats.css" th:href="@{/css/stats.css}" rel="stylesheet" type="text/css" media="all"/>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 </head>
 <div th:replace="fragments/navbar.html :: navigation"></div>
@@ -15,8 +16,24 @@
         <h2 class="text-center">Apply for vaccination now</h2>
         <h5 class="text-center" style="margin-bottom: 50px">Get your vaccine in two weeks!</h5>
         <button id="apply-button" type="button" class="btn btn-primary btn-block">Apply now</button>
-        <div id="confirm" class="alert alert-success" role="alert" style="display: none; margin-top: 15px">Your request was sent</div>
+        <div id="confirm" class="alert alert-success" role="alert" style="display: none; margin-top: 15px">Your request
+            was sent
+        </div>
     </form>
+</div>
+<div class="stats" sec:authorize="hasRole('ROLE_DOCTOR')">
+    <h3 th:text="'Total vaccinations: ' + ${totalVaccinations}"></h3>
+    <ul>
+        <li th:each="stat : ${vaccineStats}">
+            <p th:text="'Name: ' + ${stat.getVaccineType()} + ', amount of vaccinations: ' + ${stat.getCount()}"></p>
+        </li>
+    </ul>
+    <br>
+    <h5 th:text="'Pending requests: ' + ${pendingAmount}"></h5>
+    <br>
+    <h5 th:text="'Upcoming vaccinations: ' + ${upcomingAmount}"></h5>
+    <br>
+    <h5 th:text="'Planned for today: ' + ${todayAmount}"></h5>
 </div>
 <script>
     $('#apply-button').click(function () {

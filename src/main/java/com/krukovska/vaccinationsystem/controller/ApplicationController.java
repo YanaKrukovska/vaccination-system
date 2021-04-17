@@ -1,16 +1,15 @@
 package com.krukovska.vaccinationsystem.controller;
 
 import com.krukovska.vaccinationsystem.persistence.model.*;
-import com.krukovska.vaccinationsystem.persistence.repository.HealthDiaryEntryRepository;
 import com.krukovska.vaccinationsystem.service.*;
 import com.krukovska.vaccinationsystem.util.DateUtil;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -36,6 +35,14 @@ public class ApplicationController {
     public String getMainPage(Model model) {
         Person person = (Person) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         model.addAttribute("userId", person.getId());
+
+        if (person.getRole().getName().equals("ROLE_DOCTOR")) {
+            model.addAttribute("totalVaccinations", vaccinationService.getTotalAmount());
+            model.addAttribute("vaccineStats", vaccinationService.getVaccineStatistics());
+            model.addAttribute("pendingAmount", vaccinationQueueService.getAllPendingRequests().size());
+            model.addAttribute("upcomingAmount", vaccinationQueueService.getAllUpcomingVaccinations().size());
+            model.addAttribute("todayAmount", vaccinationQueueService.getAllVaccinationsForToday().size());
+        }
         return "index";
     }
 
@@ -78,6 +85,13 @@ public class ApplicationController {
     @GetMapping("/queue/upcoming")
     public String getUpcomingVaccinations(Model model) {
         model.addAttribute("appointments", vaccinationQueueService.getAllUpcomingVaccinations());
+        model.addAttribute("upcoming", true);
+        return "queue";
+    }
+
+    @GetMapping("/queue/today")
+    public String getTodayVaccinations(Model model) {
+        model.addAttribute("appointments", vaccinationQueueService.getAllVaccinationsForToday());
         model.addAttribute("upcoming", true);
         return "queue";
     }
@@ -145,7 +159,8 @@ public class ApplicationController {
     }
 
     @GetMapping("/diary/{patientUsername}")
-    public String getTemperatureDiary(@PathVariable String patientUsername, Model model) {
+    @PreAuthorize("#patientUsername == authentication.name " + "|| hasRole('ROLE_DOCTOR')")
+    public String getTemperatureDiary(@PathVariable("patientUsername") String patientUsername, Model model) {
         Patient patient = patientService.findPatientByUsername(patientUsername);
         List<HealthDiaryEntry> entries = patient.getHealthDiaryEntries();
         entries.sort(Comparator.comparing(HealthDiaryEntry::getDate));
