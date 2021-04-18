@@ -1,8 +1,8 @@
 package com.krukovska.vaccinationsystem.util;
 
-public class LabelUtil {
+public class LabelConstants {
 
-    private LabelUtil() {
+    private LabelConstants() {
     }
 
     public static final String ERROR_LABEL = "error";

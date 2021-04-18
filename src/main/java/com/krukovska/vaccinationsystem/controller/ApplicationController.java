@@ -16,7 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 import static com.krukovska.vaccinationsystem.util.DateUtil.*;
-import static com.krukovska.vaccinationsystem.util.LabelUtil.*;
+import static com.krukovska.vaccinationsystem.util.LabelConstants.*;
 
 @Controller
 public class ApplicationController {
