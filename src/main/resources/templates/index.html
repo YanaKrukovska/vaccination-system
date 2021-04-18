@@ -6,18 +6,22 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link href="../static/css/form.css" th:href="@{/css/form.css}" rel="stylesheet" type="text/css" media="all"/>
-    <link href="../static/css/stats.css" th:href="@{/css/stats.css}" rel="stylesheet" type="text/css" media="all"/>
+    <link href="../static/css/common.css" th:href="@{/css/common.css}" rel="stylesheet" type="text/css" media="all"/>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 </head>
 <div th:replace="fragments/navbar.html :: navigation"></div>
 <body>
-<div sec:authorize="hasRole('ROLE_PATIENT')" class="custom-form" style="margin-top: 5%">
+<div sec:authorize="!hasRole('ROLE_DOCTOR')" class="custom-form">
     <form>
         <h2 class="text-center">Apply for vaccination now</h2>
-        <h5 class="text-center" style="margin-bottom: 50px">Get your vaccine in two weeks!</h5>
-        <button id="apply-button" type="button" class="btn btn-primary btn-block">Apply now</button>
-        <div id="confirm" class="alert alert-success" role="alert" style="display: none; margin-top: 15px">Your request
-            was sent
+        <h5 class="text-center">Get your vaccine in two weeks!</h5>
+        <button sec:authorize="hasRole('ROLE_PATIENT')" id="apply-button" type="button"
+                class="btn btn-primary btn-block">Apply now
+        </button>
+        <div class="confirm-message">
+            <div id="confirm" class="alert alert-success" role="alert">
+                Your request was sent
+            </div>
         </div>
     </form>
 </div>

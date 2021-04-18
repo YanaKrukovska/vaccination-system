@@ -5,11 +5,37 @@
     <title>Diary</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="../static/css/common.css" th:href="@{/css/common.css}" rel="stylesheet" type="text/css" media="all"/>
 </head>
 <body>
 <div th:replace="fragments/navbar.html :: navigation"></div>
 
-<div sec:authorize="hasRole('ROLE_PATIENT')" style="margin: 25px;">
+<div class="vaccinations" th:if="${vaccines.size() != 0}">
+    <h3>Vaccines</h3>
+    <table class="table">
+        <thead class="thead-light">
+        <tr>
+            <th scope="col">Doctor ID</th>
+            <th scope="col">Vaccination Date</th>
+            <th scope="col">Vaccine Type</th>
+            <th scope="col">Doze number</th>
+            <th scope="col">Additional information</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="vaccine : ${vaccines}">
+            <td class="align-middle"><span class="align-middle" th:text="${vaccine.doctor.id}"></span></td>
+            <td class="align-middle"><span class="align-middle" th:text="${vaccine.vaccinationDate}"></span></td>
+            <td class="align-middle"><span class="align-middle" th:text="${vaccine.getVaccineType().name()}"></span>
+            </td>
+            <td class="align-middle"><span class="align-middle" th:text="${vaccine.dozeNumber}"></span></td>
+            <td class="align-middle"><span class="align-middle" th:text="${vaccine.additionalInformation}"></span></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div id="add-entry-button" sec:authorize="hasRole('ROLE_PATIENT')">
     <form th:action="@{/diary/add}" method="get">
         <button type="submit" class="btn btn-success">Add</button>
     </form>
@@ -28,9 +54,13 @@
         <tbody>
         <tr th:each="entry : ${diary}">
             <td class="align-middle"><span class="align-middle" th:text="${entry.date}"></span></td>
-            <td class="align-middle"><span class="align-middle" th:text="${entry.temperature}"></span></td>
+            <td class="align-middle">
+                <span class="align-middle" th:text="${entry.temperature}"
+                      th:style="${entry.temperature > 37.2 ? 'font-weight:bold' : 'font-weight:none'}">></span>
+            </td>
             <td>
-                <form sec:authorize="hasRole('ROLE_PATIENT')" th:action="@{/diary/edit/{entryId}(entryId=${entry.id})}" method="get">
+                <form sec:authorize="hasRole('ROLE_PATIENT')" th:action="@{/diary/edit/{entryId}(entryId=${entry.id})}"
+                      method="get">
                     <input type="hidden" name="entryId" th:value="${entry.id}">
                     <button type="submit" class="btn btn-warning">Edit</button>
                 </form>

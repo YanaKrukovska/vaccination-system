@@ -29,7 +29,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity
                 .authorizeRequests()
                 .antMatchers("/signup", "/signup-processing").not().fullyAuthenticated()
-                .antMatchers("/resources/**", "/h2-console/**", "/css/**", "/webjars/**").permitAll()
+                .antMatchers("/resources/**", "/h2-console/**", "/css/**",
+                        "/", "/doctor/all", "/error").permitAll()
                 .antMatchers("/request").authenticated()
                 .antMatchers("/request/**", "/queue/**", "vaccination/**", "/patient/**").hasRole("DOCTOR")
                 .anyRequest().authenticated()

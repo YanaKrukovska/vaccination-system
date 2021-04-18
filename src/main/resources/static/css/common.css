@@ -1,0 +1,29 @@
+.stats {
+    margin-left: 5%;
+    margin-top: 5%;
+}
+
+.vaccinations {
+    margin: 50px;
+}
+
+.errors-div > *, .confirm-message > * {
+    margin: 2%;
+}
+
+.custom-form {
+    margin-top: 5%;
+}
+
+.custom-form form h5 {
+    margin-bottom: 50px;
+}
+
+#confirm {
+    display: none;
+    margin-top: 15px;
+}
+
+#add-entry-button {
+    margin: 25px;
+}

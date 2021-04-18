@@ -4,6 +4,8 @@ import com.krukovska.vaccinationsystem.persistence.model.*;
 import com.krukovska.vaccinationsystem.service.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,7 +37,12 @@ public class ApplicationController {
 
     @GetMapping("/")
     public String getMainPage(Model model) {
-        Person person = (Person) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication instanceof AnonymousAuthenticationToken) {
+            return "index";
+        }
+
+        Person person = (Person) authentication.getPrincipal();
         model.addAttribute("userId", person.getId());
 
         if (person.getRole().getName().equals("ROLE_DOCTOR")) {
@@ -156,12 +163,9 @@ public class ApplicationController {
     @GetMapping("/profile")
     public String getPatientProfile(Model model) {
         Patient patient = (Patient) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<VaccinationQueue> pendingRequests = vaccinationQueueService.findAllPendingRequestsByPatientId(patient.getId());
-        List<VaccinationQueue> pastVaccinations = vaccinationQueueService.findAllPatientPastVaccinations(patient);
-        List<VaccinationQueue> upcomingVaccinations = vaccinationQueueService.findAllPatientUpcomingVaccinations(patient);
-        model.addAttribute("pending", pendingRequests);
-        model.addAttribute("past", pastVaccinations);
-        model.addAttribute("upcoming", upcomingVaccinations);
+        model.addAttribute("pending", vaccinationQueueService.findAllPendingRequestsByPatientId(patient.getId()));
+        model.addAttribute("past", vaccinationQueueService.findAllPatientPastVaccinations(patient));
+        model.addAttribute("upcoming", vaccinationQueueService.findAllPatientUpcomingVaccinations(patient));
         return "patient";
     }
 
@@ -173,6 +177,7 @@ public class ApplicationController {
         entries.sort(Comparator.comparing(HealthDiaryEntry::getDate));
 
         model.addAttribute("diary", entries);
+        model.addAttribute("vaccines", patient.getVaccinations());
         return "diary";
     }
 

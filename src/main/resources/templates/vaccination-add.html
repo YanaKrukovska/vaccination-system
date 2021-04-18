@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link href="../static/css/form.css" th:href="@{/css/form.css}" rel="stylesheet" type="text/css" media="all"/>
+    <link href="../static/css/common.css" th:href="@{/css/common.css}" rel="stylesheet" type="text/css" media="all"/>
 </head>
 <body>
 <div th:replace="fragments/navbar.html :: navigation"></div>
@@ -43,9 +44,8 @@
             <button type="submit" class="btn btn-success btn-block">Save</button>
         </div>
     </form>
-
-    <div th:if="${errors != null}" th:each="error : ${errors}">
-        <div class="alert alert-danger" role="alert" th:text="${error}" style="margin: 2%">
+    <div class="errors-div" th:if="${errors != null}" th:each="error : ${errors}">
+        <div class="alert alert-danger" role="alert" th:text="${error}">
         </div>
     </div>
 </div>
