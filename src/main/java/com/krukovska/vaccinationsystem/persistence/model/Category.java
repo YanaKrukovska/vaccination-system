@@ -7,7 +7,8 @@ public enum Category {
 
     MEDICAL_WORKER("Medical worker"),
     SOCIAL_WORKER("Social worker"),
-    ELDERLY("Elderly");
+    OTHER("other"),
+    ELDERLY("Elderly") ;
 
     private final String name;
 
