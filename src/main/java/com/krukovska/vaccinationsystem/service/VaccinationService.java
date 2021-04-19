@@ -30,20 +30,20 @@ public class VaccinationService {
     }
 
     private Response<Vaccination> validateVaccination(Vaccination vaccination) {
-
+        List<String> errors = new LinkedList<>();
         if (vaccination.getDoctor() == null) {
-            return new Response<>(vaccination, Collections.singletonList("Doctor can't be null"));
+            errors.add("Doctor can't be null");
         }
 
         if (vaccination.getVaccinationDate() == null) {
-            return new Response<>(vaccination, Collections.singletonList("Vaccination date can't be null"));
+            errors.add("Vaccination date can't be null");
         }
 
         if (vaccination.getVaccineType() == null) {
-            return new Response<>(vaccination, Collections.singletonList("Vaccine type can't be null"));
+            errors.add("Vaccine type can't be null");
         }
 
-        return new Response<>(vaccination, new LinkedList<>());
+        return new Response<>(vaccination, errors);
     }
 
     public long getTotalAmount() {

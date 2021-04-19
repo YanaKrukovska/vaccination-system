@@ -62,23 +62,25 @@ public class PersonService implements UserDetailsService {
     }
 
     private Response<Patient> validatePatient(Patient patient) {
+        List<String> errors = new LinkedList<>();
 
         if (patient.getUsername() == null || patient.getUsername().isBlank()) {
-            return new Response<>(patient, Collections.singletonList("Username can't be empty"));
+            errors.add("Username can't be empty");
         }
 
         if (patient.getPassword() == null || patient.getPassword().isBlank()) {
-            return new Response<>(patient, Collections.singletonList("Password can't be empty"));
+            errors.add("Password can't be empty");
         }
 
         if (patient.getEmergencyContact() == null || patient.getEmergencyContact().isBlank()) {
-            return new Response<>(patient, Collections.singletonList("Emergency contact can't be empty"));
+            errors.add("Emergency contact can't be empty");
         }
 
         if (patient.getAddress() == null || patient.getAddress().isBlank()) {
-            return new Response<>(patient, Collections.singletonList("Address can't be empty"));
+            errors.add("Address can't be empty");
+
         }
 
-        return new Response<>(patient, new LinkedList<>());
+        return new Response<>(patient, errors);
     }
 }

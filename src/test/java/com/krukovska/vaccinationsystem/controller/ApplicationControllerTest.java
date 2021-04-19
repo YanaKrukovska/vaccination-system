@@ -1,9 +1,8 @@
 package com.krukovska.vaccinationsystem.controller;
 
-import com.krukovska.vaccinationsystem.service.*;
+import com.krukovska.vaccinationsystem.service.DoctorService;
+import com.krukovska.vaccinationsystem.service.PatientService;
 import io.restassured.RestAssured;
-import io.restassured.response.ExtractableResponse;
-import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -15,28 +14,55 @@ import static org.mockito.Mockito.verify;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ApplicationControllerTest {
 
+    public static final String BASE_URL = "http://localhost:";
+    public static final String TEST_USER = "OlegVynnyk";
+    public static final String USER_PASS = "1";
     @LocalServerPort
     private Integer port;
-    @MockBean
-    private VaccinationQueueService vaccinationQueueService;
-    @MockBean
-    private HealthDiaryEntryService healthDiaryEntryService;
-    @MockBean
-    private VaccinationService vaccinationService;
+
     @MockBean
     private PatientService patientService;
     @MockBean
     private DoctorService doctorService;
 
+    @Test
+    void shouldGetAllPatientCritical() {
 
+        RestAssured
+                .given().auth().form(TEST_USER, USER_PASS)
+                .when()
+                .get(BASE_URL + port + "/patient/critical")
+                .then()
+                .statusCode(200)
+                .extract();
+
+        verify(patientService, times(1)).findAllWithHighTemperature();
+    }
+
+
+
+    @Test
+    void shouldGetAllPatientAll() {
+
+        RestAssured
+                .given().auth().form(TEST_USER, USER_PASS)
+                .when()
+                .get(BASE_URL + port + "/patient/all")
+                .then()
+                .statusCode(200)
+                .extract();
+
+        verify(patientService, times(1)).findAll();
+
+    }
 
     @Test
     void shouldGetAllPatientElderly() {
 
-        ExtractableResponse<Response> resp = RestAssured
-                .given().auth().form("OlegVynnyk", "1")
+        RestAssured
+                .given().auth().form(TEST_USER, USER_PASS)
                 .when()
-                .get("http://localhost:" + port + "/patient/elderly")
+                .get(BASE_URL + port + "/patient/elderly")
                 .then()
                 .statusCode(200)
                 .extract();
@@ -46,13 +72,12 @@ class ApplicationControllerTest {
     }
 
 
-
     @Test
     void shouldGetAllDoctors() {
 
         RestAssured
                 .when()
-                .get("http://localhost:" + port + "/doctor/all")
+                .get(BASE_URL + port + "/doctor/all")
                 .then()
                 .statusCode(200)
                 .extract();
